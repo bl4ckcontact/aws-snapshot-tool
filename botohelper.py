@@ -1,3 +1,9 @@
+'''
+Created on Jul 17, 2012
+Edited by bl4ckcontact
+
+@author: mraposa
+'''
 from operator import attrgetter
 
 import boto
@@ -9,10 +15,10 @@ class TagError(Exception):
 
 class BotoHelper():
     def __init__(self, aws_access_key_id, aws_secret_access_key):
-        #self.access_key = aws_access_key_id
-        #self.secret_key = aws_secret_access_key
-        self.ec2 = boto.connect_ec2(aws_access_key_id, aws_secret_access_key)
-        self.s3 = boto.connect_s3(aws_access_key_id, aws_secret_access_key)
+        self.access_key = aws_access_key_id
+        self.secret_key = aws_secret_access_key
+        self.ec2 = boto.connect_ec2(self.access_key, self.secret_key)
+        self.s3 = boto.connect_s3(self.access_key, self.secret_key)
 
     def get_instance_volumes(self, instance_id):
         volumes = self.ec2.get_all_volumes(filters={'attachment.instance-id': instance_id})
