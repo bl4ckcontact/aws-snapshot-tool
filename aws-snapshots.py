@@ -1,10 +1,19 @@
 #!/usr/bin/env python
 import os
 import datetime
+import logging
 from botohelper import BotoHelper
 from prettytable import PrettyTable
 
-if __name__ == '__main__':
+logger = logging.getLogger(__name__)
+
+
+def main():
+    logger.log = logging.basicConfig(filename="test.log",
+                                     level=logging.INFO,
+                                     format='%(asctime)s.%(msecs)d %(levelname)s: %(message)s',
+                                     datefmt="%Y-%m-%d %H:%M:%S")
+    logger.info("Connecting to Amazon EC2")
     bh = BotoHelper(os.environ.get('AWS_ACCESS_KEY_ID'), os.environ.get('AWS_SECRET_ACCESS_KEY'))
     volumes = bh.get_all_volumes()
 
@@ -26,13 +35,20 @@ if __name__ == '__main__':
             snapshot_description = snapshot_prefix.replace(" ", "_") + vol_name.replace(" ", "_")
 
             try:
+                logger.info("Attempting to snapshot '%s' on instance '%s'" % (vol_name, instance_name))
                 backup_result = bh.backup_instance(instance_name, snapshot_prefix)
             except Exception, ex:
                 if ex.status == 403:
                     backup_result = ex.reason.upper() + ": " + "Access denied."
+                    logger.error(backup_result)
                 else:
                     backup_result = 'ERROR: ' + ex.__dict__ + ex.error_message
+            finally:
+                backup_result = str(backup_result)
 
             pt.add_row([instance_name, vol_name, snapshot_description, backup_result])
 
     print pt
+
+if __name__ == '__main__':
+    main()

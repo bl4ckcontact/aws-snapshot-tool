@@ -4,8 +4,6 @@ Edited by bl4ckcontact
 
 @author: mraposa
 '''
-from operator import attrgetter
-
 import boto
 
 
