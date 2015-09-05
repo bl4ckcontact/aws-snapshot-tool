@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    logger.log = logging.basicConfig(filename="test.log",
+    logger.log = logging.basicConfig(filename="aws-snapshots.log",
                                      level=logging.INFO,
                                      format='%(asctime)s %(levelname)s: %(message)s',
                                      datefmt="%Y-%m-%d %H:%M:%S")
