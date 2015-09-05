@@ -20,6 +20,7 @@ class TagError(Exception):
 
 class BotoHelper():
     def __init__(self, aws_access_key_id, aws_secret_access_key):
+        logger.info("***** Connecting to Amazon EC2 *****")
         self.access_key = aws_access_key_id
         self.secret_key = aws_secret_access_key
         self.ec2 = boto.connect_ec2(self.access_key, self.secret_key)
@@ -69,6 +70,9 @@ class BotoHelper():
         volumes = self.get_instance_volumes(self.get_instance_id(instance_name))
         snapshot_description = "%s_%s" % (description_prefix, instance_name)
         for volume in volumes:
+            v = volume.attach_data.instance_id
+            instance_name = self.get_instance_name(v)
+            logger.info("Attempting to snapshot '%s' on instance '%s'" % (volume.tags['Name'], instance_name))
             try:
                 self.ec2.create_snapshot(volume.id, snapshot_description)
             except boto.exception.EC2ResponseError, e:
