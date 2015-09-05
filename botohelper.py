@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger(__name__)
 logger.log = logging.basicConfig(filename="test.log",
                                  level=logging.INFO,
-                                 format='%(asctime)s %(levelname)s: %(message)s',
+                                 format='%(asctime)s [%(levelname)8s] %(message)s',
                                  datefmt="%Y-%m-%d %H:%M:%S")
 
 
@@ -73,6 +73,8 @@ class BotoHelper():
                 self.ec2.create_snapshot(volume.id, snapshot_description)
             except boto.exception.EC2ResponseError, e:
                 logger.error("FORBIDDEN: " + e.error_message)
+                raise
+            logger.info("SUCCESS: The snapshot was initiated successfully.")
             return "SUCCESS: The snapshot was initiated successfully."
 
     def backup_all_instances(self, description_prefix="Automated_Backup"):
