@@ -5,6 +5,13 @@ Edited by bl4ckcontact
 @author: mraposa
 '''
 import boto
+import logging
+
+logger = logging.getLogger(__name__)
+logger.log = logging.basicConfig(filename="test.log",
+                                 level=logging.INFO,
+                                 format='%(asctime)s %(levelname)s: %(message)s',
+                                 datefmt="%Y-%m-%d %H:%M:%S")
 
 
 class TagError(Exception):
@@ -62,7 +69,10 @@ class BotoHelper():
         volumes = self.get_instance_volumes(self.get_instance_id(instance_name))
         snapshot_description = "%s_%s" % (description_prefix, instance_name)
         for volume in volumes:
-            self.ec2.create_snapshot(volume.id, snapshot_description)
+            try:
+                self.ec2.create_snapshot(volume.id, snapshot_description)
+            except boto.exception.EC2ResponseError, e:
+                logger.error("FORBIDDEN: " + e.error_message)
             return "SUCCESS: The snapshot was initiated successfully."
 
     def backup_all_instances(self, description_prefix="Automated_Backup"):
