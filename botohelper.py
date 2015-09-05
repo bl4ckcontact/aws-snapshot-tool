@@ -8,7 +8,7 @@ import boto
 import logging
 
 logger = logging.getLogger(__name__)
-logger.log = logging.basicConfig(filename="test.log",
+logger.log = logging.basicConfig(filename="aws-snapshots.log",
                                  level=logging.INFO,
                                  format='%(asctime)s [%(levelname)8s] %(message)s',
                                  datefmt="%Y-%m-%d %H:%M:%S")
