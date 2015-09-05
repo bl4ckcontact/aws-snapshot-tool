@@ -28,7 +28,7 @@ _Additionally, any volumes desired to be snapshotted must have the custom tag `'
 
 ## Configuration
 
-This tool utilizes the *boto* library, and as such, requires the same configuration schema. To learn how to properly create your configuration file, [http://boto.readthedocs.org/en/latest/boto_config_tut.html](check out the documentation).
+This tool utilizes the *boto* library, and as such, requires the same configuration schema. To learn how to properly create your configuration file, [check out the documentation](http://boto.readthedocs.org/en/latest/boto_config_tut.html).
 
 To get started quickly your configuration file should be named `.boto` and reside in your users home directory.
 i.e. `~/.boto`
