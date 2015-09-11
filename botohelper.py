@@ -81,15 +81,6 @@ class BotoHelper():
             logger.info("SUCCESS: The snapshot was initiated successfully.")
             return "SUCCESS: The snapshot was initiated successfully."
 
-    def backup_all_instances(self, description_prefix="Automated_Backup"):
-        for instance in self.get_all_instances():
-            tags = instance.__dict__['tags']
-            try:
-                name = tags['Name']
-            except KeyError:
-                raise TagError("Name Tag not specified on AWS Instance: {}".format(instance))
-            self.backup_instance(name, description_prefix)
-
     def get_all_instance_status(self):
         return self.ec2.get_all_instance_status()
 
