@@ -1,12 +1,15 @@
 # AWS Snapshot Tool
 
-AWS snapshotting in one command.
+AWS snapshot management via CLI.
 
-This AWS snapshotting tool helps you simply snapshot specific volumes within a region, as specified in a configuration file. More specifically it looks for any volumes that contain a custom tag with a `'Snapshots': 'true'` key/value.
+This AWS snapshotting tool helps you create and delete snapshots for specific volumes within a defined region. More specifically it creates snapshots for any volumes that contain a custom tag with a `'Snapshots': 'true'` key/value.
 
-Information will be printed to stdout in a table, such at the one below:
+Information will be printed to stdout in a table, such at the ones below:
 
+*Snapshot Creation:*
 ```
+$ aws-create-snapshot.py
+
 +-----------------+-----------------------+------------------------------+---------------------------------------------------+
 | Instance Name   |         Volume        |     Snapshot Description     |                       Status                      |
 +-----------------+-----------------------+------------------------------+---------------------------------------------------+
@@ -15,6 +18,18 @@ Information will be printed to stdout in a table, such at the one below:
 | Instance_B      |       Volume B 1      |     2015-09-05_Volume_B_1    | SUCCESS: The snapshot was initiated successfully. |
 | Instance_C      |       Volume C 1      |     2015-09-05_Volume_C_1    | SUCCESS: The snapshot was initiated successfully. |
 +-----------------+-----------------------+------------------------------+---------------------------------------------------+
+```
+
+*Snapshot Deletion:*
+```
+$ aws-delete-snapshot.py --days 0 --weeks 4
++---------------+--------------------------+--------------------------------+---------------------------+
+| Source Volume |         Created          |      Snapshot Description      |           Status          |
++---------------+--------------------------+--------------------------------+---------------------------+
+|  vol-042abb52 | 2015-04-30T03:27:41.000Z |  Example_snapshot_to_delete_1  | SUCCESS: The snapshot was deleted successfully. |
+|  vol-61ga7637 | 2015-05-25T01:48:29.000Z |  Example_snapshot_to_delete_2  | SUCCESS: The snapshot was deleted successfully. |
+|  vol-296a8b7f | 2015-05-26T19:24:41.000Z |  Example_snapshot_to_delete_3  | SUCCESS: The snapshot was deleted successfully. |
++---------------+--------------------------+--------------------------------+---------------------------+
 ```
 
 **This is a work in progress. Use at your own risk!**
@@ -56,4 +71,4 @@ $ ./aws-snapshot.py
 ```
 
 ## Logging
-A log file `aws-snapshot.log` will be generated if not already present, and will append events/errors to the same.
+A log file `aws-snapshots.log` will be generated if not already present, and will append events/errors to the same.
