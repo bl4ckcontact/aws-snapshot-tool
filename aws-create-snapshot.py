@@ -4,6 +4,10 @@ import datetime
 import boto.ec2
 from botohelper import BotoHelper
 from prettytable import PrettyTable
+import loghelper as log
+
+
+log = log.logHelper("./aws-snapshots.log", useConsole=False)
 
 
 def main():
@@ -33,9 +37,12 @@ def main():
             if v.tags.get('Snapshot') == 'true':
                 # try to back up volume. if it fails, log it and return the exception
                 try:
+                    log.info("Attempting to snapshot '%s' on instance '%s'" % (v.tags['Name'], instance_name))
                     backup_result = bh.backup_instance(instance_name, snapshot_prefix)
+                    log.info("SUCCESS: The snapshot was initiated successfully.")
                 except boto.exception.EC2ResponseError, ex:
                     if ex.status == 403:
+                        log.error("FORBIDDEN: " + ex.error_message)
                         backup_result = ex.reason.upper() + ": " + "Access denied."
                     else:
                         backup_result = 'ERROR: ' + ex.error_message

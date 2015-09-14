@@ -5,13 +5,6 @@ Edited by bl4ckcontact
 @author: mraposa
 '''
 import boto
-import logging
-
-logger = logging.getLogger(__name__)
-logger.log = logging.basicConfig(filename="aws-snapshots.log",
-                                 level=logging.INFO,
-                                 format='%(asctime)s [%(levelname)8s] %(message)s',
-                                 datefmt="%Y-%m-%d %H:%M:%S")
 
 
 class TagError(Exception):
@@ -20,7 +13,6 @@ class TagError(Exception):
 
 class BotoHelper():
     def __init__(self, aws_access_key_id, aws_secret_access_key):
-        logger.info("***** Connecting to Amazon EC2 *****")
         self.access_key = aws_access_key_id
         self.secret_key = aws_secret_access_key
         self.ec2 = boto.connect_ec2(self.access_key, self.secret_key)
@@ -72,13 +64,10 @@ class BotoHelper():
         for volume in volumes:
             v = volume.attach_data.instance_id
             instance_name = self.get_instance_name(v)
-            logger.info("Attempting to snapshot '%s' on instance '%s'" % (volume.tags['Name'], instance_name))
             try:
                 self.ec2.create_snapshot(volume.id, snapshot_description)
-            except boto.exception.EC2ResponseError, e:
-                logger.error("FORBIDDEN: " + e.error_message)
+            except boto.exception.EC2ResponseError:
                 raise
-            logger.info("SUCCESS: The snapshot was initiated successfully.")
             return "SUCCESS: The snapshot was initiated successfully."
 
     def get_all_instance_status(self):
