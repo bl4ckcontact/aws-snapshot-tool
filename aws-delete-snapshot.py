@@ -43,7 +43,7 @@ def main():
         if start_time < current_time - datetime.timedelta(weeks=args.weeks[0], days=args.days[0]):
             try:
                 log.info("Attempting to delete snapshot '%s'" % (snapshot.volume_id))
-                del_snap = conn.delete_snapshot(snapshot, dry_run=args.dry_run)
+                del_snap = conn.delete_snapshot(snapshot.id, dry_run=args.dry_run)
                 log.info("SUCCESS: The snapshot was deleted successfully.")
             except boto.exception.EC2ResponseError, ex:
                 if ex.status == 403:
